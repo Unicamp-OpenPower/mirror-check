@@ -50,7 +50,7 @@ for mirror in mirrors:
 
 # Update time
 config_data['lastRun'] = now.strftime("%Y-%m-%d %H:%M")
-template = config_data['template']
+template_name = config_data['template']
 
 # Save data
 file = open('./config.yaml', 'w')
@@ -58,10 +58,10 @@ yaml.dump(config_data, file, Dumper=yaml.RoundTripDumper)
 
 # Load Jinja2 template
 env = Environment(loader = FileSystemLoader('./'), trim_blocks=True, lstrip_blocks=True)
-template = env.get_template('templates/' + template +'/template.j2')
+template = env.get_template('templates/' + template_name +'/template.j2')
 
 # Update template files in the webpage folder
-os.system('cp templates/' + template +'/* webpage/ ; rm webpage/template.j2')
+os.system('cp -r templates/' + template_name +'/* webpage/ ; rm webpage/template.j2')
 
 # Render the template with data and save in webpage/index.html
 file = open('webpage/index.html', 'w')
