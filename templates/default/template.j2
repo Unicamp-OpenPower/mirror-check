@@ -1,0 +1,141 @@
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="img/favicon.ico">
+    <title>{{ original.name }} Mirrors</title>
+        <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <link href="css/ie10-viewport-bug-workaround.css" rel="stylesheet">
+
+    <!-- Custom styles -->
+    <link href="css/style.css" rel="stylesheet">
+    <script type="text/javascript">
+
+      window.onload=function(){
+        (function timeAgo(selector) {
+
+            var templates = {
+                prefix: "",
+                suffix: " ago",
+                seconds: "less than a minute",
+                minute: "about a minute",
+                minutes: "%d minutes",
+                hour: "about an hour",
+                hours: "about %d hours",
+                day: "a day",
+                days: "%d days",
+                month: "about a month",
+                months: "%d months",
+                year: "about a year",
+                years: "%d years"
+            };
+            var template = function (t, n) {
+                return templates[t] && templates[t].replace(/%d/i, Math.abs(Math.round(n)));
+            };
+
+            var timer = function (time) {
+                if (!time) return;
+                time = time.replace(/\.\d+/, ""); // remove milliseconds
+                time = time.replace(/-/, "/").replace(/-/, "/");
+                time = time.replace(/T/, " ").replace(/Z/, " UTC");
+                time = time.replace(/([\+\-]\d\d)\:?(\d\d)/, " $1$2"); // -04:00 -> -0400
+                time = new Date(time * 1000 || time);
+
+                var now = new Date();
+                var seconds = ((now.getTime() - time) * .001) >> 0;
+                var minutes = seconds / 60;
+                var hours = minutes / 60;
+                var days = hours / 24;
+                var years = days / 365;
+
+                return templates.prefix + (
+                seconds < 45 && template('seconds', seconds) || seconds < 90 && template('minute', 1) || minutes < 45 && template('minutes', minutes) || minutes < 90 && template('hour', 1) || hours < 24 && template('hours', hours) || hours < 42 && template('day', 1) || days < 30 && template('days', days) || days < 45 && template('month', 1) || days < 365 && template('months', days / 30) || years < 1.5 && template('year', 1) || template('years', years)) + templates.suffix;
+            };
+
+            var elements = document.getElementsByClassName('timeago');
+            for (var i in elements) {
+                var $this = elements[i];
+                if (typeof $this === 'object') {
+                    $this.innerHTML = timer($this.getAttribute('title') || $this.getAttribute('datetime'));
+                }
+            }
+            // update time every minute
+            setTimeout(timeAgo, 60000);
+
+        })();
+      }
+    </script>
+
+  </head>
+
+  <body>
+      <div class="container">
+          <div class="row">
+            <div class="col-md-12">
+              <h1>Mirror Status Page</h1>
+            </div>
+          </div>
+          <div class="row clearfix">
+              <div class="col-md-12 column">
+                  <div class="panel panel-warning">
+                    <div class="panel-heading">
+                      <h3 class="panel-title">
+                      {% set updated = [] %}
+                      {% for mirror in mirrors.values() %}
+                        {% if mirror.updated == False %}
+                           {% if updated.append('1') %}{% endif %}
+                        {% endif %}
+                      {% endfor %}
+                        {% if updated == [] %}
+                        All Mirrors Updated
+                        {% else %}
+                        Not All Mirrors Updated
+                        {% endif %}
+                        <small class="pull-right">Verified <span class="timeago" datetime="{{ lastRun }}">in {{ lastRun }}</span></small>
+                      </h3>
+                    </div>
+                  </div>
+                  <div class="row clearfix">
+                      <div class="col-md-12 column">
+                          <div class="list-group">
+                            {% for mirror in mirrors.values() %}
+                              <div class="list-group-item">
+                                  <h4 class="list-group-item-heading">
+                                      {{ mirror.name }}
+                                      <small class="pull-right">
+                                      Last update <span class="timeago" datetime="{{ mirror.lastUpdate }}">in {{ mirror.lastUpdate }}</span>
+                                      </small>
+                                  </h4>
+
+                                  <p><em><a href="{{ mirror.url }}">
+                                      {{ mirror.urlText }}
+                                  </a></em></p>
+
+                                {% if mirror.updated == true %}
+                                  <p class="list-group-item-text">
+                                      <span class="label label-success">Updated</span>
+                                  </p>
+
+                                {% else %}
+                                  <p class="list-group-item-text">
+                                      <span class="label label-danger">Outdated</span>
+                                      <small class="pull-right">
+                                        <a href="{{ mirror.diffFile }}">View diff</a>
+                                      </small>
+                                  </p>
+                                {% endif %}
+                              </div>
+
+                              {% endfor %}
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </body>
+</html>

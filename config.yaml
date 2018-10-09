@@ -1,0 +1,19 @@
+lastRun:
+template: default
+original:
+  name: Original Server
+mirrors:
+  server1:
+    updated: false
+    diffFile: server1-diff.txt
+    lastUpdate:
+    name: Server 1 FTP
+    urlText: ftp.server1.com
+    url: http://ftp.server1.com/
+  server2:
+    updated: false
+    diffFile: server2-diff.txt
+    lastUpdate:
+    name: Server 2 FTP
+    urlText: ftp.server2.com
+    url: http://ftp.server2.com/
