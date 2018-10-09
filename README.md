@@ -1,6 +1,8 @@
 # Mirror Check
 Check if mirrors are updated and generate a status web page.
 
+![Mirror Check Screenshot](https://user-images.githubusercontent.com/24390439/46643340-0798a080-cb52-11e8-84e9-60699b45090a.png)
+
 ## Installation
 
 ### Prerequisites
@@ -30,7 +32,7 @@ Edit the ```/conf``` folder files with the settings of each ```lftp``` connectio
 ## Running
 To generate the status web page, you can setup a ```cronjob``` with this command:
 ```sh
-cd /mirror-check ; python3 generate.py > webpage/index.html
+cd /mirror-check ; python3 generate.py
 ```
 Replace the ```mirror-check``` directory with your installation path. Put the files of ```/webpage``` folder in a web server directory, or just create a symbolic link between them.
 
